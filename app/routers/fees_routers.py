@@ -66,7 +66,7 @@ def create_fee(
 
     fee = Fee(
 
-        student_id=student.id,
+        student_id=student.student_id,
 
         month=data.month,
 
@@ -158,7 +158,7 @@ def update_fee(
         db.query(StudentProfile)
 
         .filter(
-            StudentProfile.id
+            StudentProfile.student_id
             == fee.student_id
         )
 
@@ -207,7 +207,7 @@ def my_fees(
 
         .filter(
             Fee.student_id
-            == student.id
+            == student.student_id
         )
 
         .order_by(
@@ -269,7 +269,7 @@ def fee_detail(
             Fee.id == fee_id,
 
             Fee.student_id
-            == student.id
+            == student.student_id
         )
 
         .first()

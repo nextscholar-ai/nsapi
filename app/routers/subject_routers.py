@@ -2,6 +2,8 @@ from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
 
+from sqlalchemy import func
+
 from sqlalchemy.orm import Session
 
 from app.models import (
@@ -52,7 +54,7 @@ def create_subject(
         db.query(Subject)
 
         .filter(
-            Subject.subject_name == data.subject_name
+            func.lower(Subject.subject_name) == func.lower(data.subject_name)
         )
 
         .first()
@@ -142,7 +144,8 @@ def create_subject_progress(
 
         .filter(
             SubjectProgress.student_id
-            == student.id,
+            == student.student_id,
+
 
             SubjectProgress.subject_id
             == data.subject_id
@@ -160,7 +163,8 @@ def create_subject_progress(
 
     progress = SubjectProgress(
 
-        student_id=student.id,
+        student_id=student.student_id,
+
 
         subject_id=data.subject_id,
 
@@ -181,7 +185,7 @@ def create_subject_progress(
 
     return SubjectProgressResponse(
         id=progress.id,
-        subject_name=progress.subject.subject_name,
+        subject_name=(progress.subject.subject_name if progress.subject else ""),
         total_chapters=progress.total_chapters,
         completed_chapters=progress.completed_chapters,
         total_classes=progress.total_classes,
@@ -192,6 +196,7 @@ def create_subject_progress(
 # =====================================================
 # UPDATE SUBJECT PROGRESS
 # =====================================================
+
 
 @router.put(
     "/progress/{student_id}/{subject_id}",
@@ -234,10 +239,11 @@ def update_subject_progress(
 
         .filter(
             SubjectProgress.student_id
-            == student.id,
+            == student.student_id,
 
             SubjectProgress.subject_id
             == subject_id
+
         )
 
         .first()
@@ -264,7 +270,7 @@ def update_subject_progress(
 
     return SubjectProgressResponse(
         id=progress.id,
-        subject_name=progress.subject.subject_name,
+        subject_name=(progress.subject.subject_name if progress.subject else ""),
         total_chapters=progress.total_chapters,
         completed_chapters=progress.completed_chapters,
         total_classes=progress.total_classes,
@@ -298,7 +304,8 @@ def my_progress(
 
         .filter(
             SubjectProgress.student_id
-            == student.id
+            == student.student_id
+
         )
 
         .all()
@@ -308,6 +315,7 @@ def my_progress(
         SubjectProgressResponse(
             id=p.id,
             subject_name=(p.subject.subject_name if p.subject else ""),
+
             total_chapters=p.total_chapters,
             completed_chapters=p.completed_chapters,
             total_classes=p.total_classes,

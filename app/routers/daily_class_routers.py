@@ -65,7 +65,7 @@ def create_daily_class(
 
     daily_class = DailyClass(
 
-        student_id=student.id,
+        student_id=student.student_id,
 
         subject_name=data.subject_name,
 
@@ -173,7 +173,7 @@ def my_classes(
 
         .filter(
             DailyClass.student_id
-            == student.id
+            == student.student_id
         )
 
         .order_by(
@@ -210,7 +210,7 @@ def classes_by_subject(
 
         .filter(
             DailyClass.student_id
-            == student.id,
+            == student.student_id,
 
             DailyClass.subject_name
             == subject_name

@@ -113,13 +113,12 @@ class StudentProfileUpdate(BaseModel):
 
 class StudentProfileResponse(BaseModel):
 
-    id: int
-
     student_id: str
 
     student_name: str
 
     student_email: str
+
 
     student_phone: Optional[str] = None
 
@@ -174,7 +173,7 @@ class AlumnusDetailUpdate(BaseModel):
 
 class AlumnusDetailResponse(BaseModel):
 
-    id: int
+
 
     student_id: str
 
@@ -428,26 +427,25 @@ class ExamUpdate(BaseModel):
 
 class ExamResponse(BaseModel):
 
-    id: int
-
-    student_id: int
-
+    # ExamResult model ke composite primary key fields:
+    # - Exam_id
+    # - student_id
+    # DB model me "id" column nahi hai.
     Exam_id: int
+    student_id: str
 
     subject_name: str
-
     exam_name: str
-
     exam_date: datetime
-
     total_marks: float
-
     obtained_marks: float
-
     percentage: float
 
     class Config:
         from_attributes = True
+
+
+
 
 
 # =====================================================

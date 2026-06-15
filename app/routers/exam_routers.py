@@ -132,7 +132,8 @@ def create_exam(
 
     result = ExamResult(
         Exam_id=exam.id,
-        student_id=student.id,
+        student_id=student.student_id,
+
         subject_name=subject_for_result.subject_name,
         exam_name=exam.exam_name,
         exam_date=exam.exam_date,
@@ -170,15 +171,13 @@ def update_exam(
 ):
 
     exam = (
-
         db.query(ExamResult)
-
         .filter(
-            ExamResult.id == exam_id
+            ExamResult.Exam_id == exam_id
         )
-
         .first()
     )
+
 
     if not exam:
 
@@ -241,7 +240,7 @@ def my_results(
 
         .filter(
             ExamResult.student_id
-            == student.id
+            == student.student_id
         )
 
         .order_by(
@@ -273,16 +272,11 @@ def single_result(
 ):
 
     exam = (
-
         db.query(ExamResult)
-
         .filter(
-            ExamResult.id == exam_id,
-
-            ExamResult.student_id
-            == student.id
+            ExamResult.Exam_id == exam_id,
+            ExamResult.student_id == student.student_id,
         )
-
         .first()
     )
 
@@ -322,7 +316,7 @@ def results_by_subject(
 
         .filter(
             ExamResult.student_id
-            == student.id,
+            == student.student_id,
 
             ExamResult.subject_name
             == subject_name

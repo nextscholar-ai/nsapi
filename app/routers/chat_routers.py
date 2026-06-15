@@ -67,7 +67,7 @@ def send_message(
 
     chat = ChatMessage(
 
-        student_id=student.id,
+        student_id=student.student_id,
 
         sender_type=data.sender_type,
 
@@ -109,7 +109,7 @@ def my_messages(
 
         .filter(
             ChatMessage.student_id
-            == student.id
+            == student.student_id
         )
 
         .order_by(
@@ -159,7 +159,7 @@ def send_voice_message(
 
     voice = VoiceMessage(
 
-        student_id=student.id,
+        student_id=student.student_id,
 
         sender_type=data.sender_type,
 
@@ -201,7 +201,7 @@ def my_voice_messages(
 
         .filter(
             VoiceMessage.student_id
-            == student.id
+            == student.student_id
         )
 
         .order_by(

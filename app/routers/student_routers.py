@@ -118,8 +118,8 @@ def create_alumnus_detail(
         db.query(AlumnusDetail)
 
         .filter(
-            AlumnusDetail.student_profile_id
-            == student.id
+            AlumnusDetail.student_id
+            == student.student_id
         )
 
         .first()
@@ -133,8 +133,6 @@ def create_alumnus_detail(
         )
 
     alumnus = AlumnusDetail(
-
-        student_profile_id=student.id,
 
         student_id=student.student_id,
 
@@ -151,11 +149,31 @@ def create_alumnus_detail(
 
     db.add(alumnus)
 
-    db.commit()
+    try:
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to create alumnus detail: {e}"
+        )
 
-    db.refresh(alumnus)
+    # Verify row actually exists in DB after commit
+    saved = (
+        db.query(AlumnusDetail)
+        .filter(AlumnusDetail.student_id == student.student_id)
+        .first()
+    )
 
-    return alumnus
+    if not saved:
+        raise HTTPException(
+            status_code=500,
+            detail="Commit succeeded but alumnus_details row not found"
+        )
+
+    db.refresh(saved)
+
+    return saved
 
 
 # =====================================================
@@ -180,8 +198,8 @@ def get_alumnus_detail(
         db.query(AlumnusDetail)
 
         .filter(
-            AlumnusDetail.student_profile_id
-            == student.id
+            AlumnusDetail.student_id
+            == student.student_id
         )
 
         .first()
@@ -191,16 +209,16 @@ def get_alumnus_detail(
     # fetched from student profile instead of 404.
     if not alumnus:
         return AlumnusDetailResponse(
-            id=0,
             student_id=student.student_id,
             student_name=student.student_name,
             student_address=student.student_address,
-            student_class=student.student_class,
+             student_class=student.student_class,
             medium=student.medium,
             previous_result=None,
         )
 
     return alumnus
+
 
 
 # =====================================================
@@ -212,7 +230,6 @@ def get_alumnus_detail(
     response_model=AlumnusDetailResponse
 )
 def update_alumnus_detail(
-
     data: AlumnusDetailUpdate,
 
     db: Session = Depends(get_db),
@@ -227,8 +244,8 @@ def update_alumnus_detail(
         db.query(AlumnusDetail)
 
         .filter(
-            AlumnusDetail.student_profile_id
-            == student.id
+            AlumnusDetail.student_id
+            == student.student_id
         )
 
         .first()
@@ -285,8 +302,8 @@ def student_dashboard(
         db.query(AlumnusDetail)
 
         .filter(
-            AlumnusDetail.student_profile_id
-            == student.id
+            AlumnusDetail.student_id
+            == student.student_id
         )
 
         .first()

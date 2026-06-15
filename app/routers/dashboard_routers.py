@@ -49,8 +49,8 @@ def dashboard(
         db.query(AlumnusDetail)
 
         .filter(
-            AlumnusDetail.student_profile_id
-            == student.id
+AlumnusDetail.student_id
+            == student.student_id
         )
 
         .first()
@@ -64,7 +64,7 @@ def dashboard(
 
         .filter(
             SubjectProgress.student_id
-            == student.id
+            == student.student_id
         )
 
         .count()
@@ -78,7 +78,7 @@ def dashboard(
 
         .filter(
             DailyClass.student_id
-            == student.id
+            == student.student_id
         )
 
         .count()
@@ -92,10 +92,9 @@ def dashboard(
 
         .filter(
             DailyClass.student_id
-            == student.id,
+            == student.student_id,
 
-            DailyClass.attendance
-            == "P"
+            func.lower(DailyClass.attendance).in_(["p", "present"])
         )
 
         .count()
@@ -109,7 +108,7 @@ def dashboard(
 
         .filter(
             AssignmentSubmission.student_id
-            == student.id
+            == student.student_id
         )
 
         .count()
@@ -124,7 +123,7 @@ def dashboard(
 
         .filter(
             ExamResult.student_id
-            == student.id
+            == student.student_id
         )
 
         .count()
@@ -140,7 +139,7 @@ def dashboard(
 
         .filter(
             ExamResult.student_id
-            == student.id
+            == student.student_id
         )
 
         .scalar()
@@ -154,7 +153,7 @@ def dashboard(
 
         .filter(
             Fee.student_id
-            == student.id
+            == student.student_id
         )
 
         .all()
@@ -178,7 +177,7 @@ def dashboard(
 
         .filter(
             ChatMessage.student_id
-            == student.id
+            == student.student_id
         )
 
         .count()
@@ -192,7 +191,7 @@ def dashboard(
 
         .filter(
             DailyClass.student_id
-            == student.id
+            == student.student_id
         )
 
         .order_by(

@@ -135,7 +135,13 @@ class OTP(Base):
 class StudentProfile(Base):
     __tablename__ = "student_profiles"
 
-    id = Column(Integer, primary_key=True, index=True)
+    student_id = Column(
+        String,
+        unique=True,
+        primary_key=True,   
+        index=True,
+        nullable=False,
+    )
 
     user_id = Column(
         Integer,
@@ -144,11 +150,6 @@ class StudentProfile(Base):
         nullable=False
     )
 
-    student_id = Column(
-        String,
-        unique=True,
-        nullable=False,
-    )
 
     student_name = Column(
         String,
@@ -281,19 +282,16 @@ class StudentProfile(Base):
 class AlumnusDetail(Base):
     __tablename__ = "alumnus_details"
 
-    id = Column(Integer, primary_key=True, index=True)
-
-    student_profile_id = Column(
-        Integer,
-        ForeignKey("student_profiles.id"),
-        unique=True,
-        nullable=False
-    )
 
     student_id = Column(
         String,
-        nullable=False,
+        ForeignKey("student_profiles.student_id"),
+        unique=True,
+        primary_key=True,   # make it the primary key
+        index=True,
+        nullable=False
     )
+
 
     student_name = Column(
         String,
@@ -374,8 +372,9 @@ class SubjectProgress(Base):
     id = Column(Integer, primary_key=True, index=True)
 
     student_id = Column(
-        Integer,
+        String,
         ForeignKey("student_profiles.student_id"),
+        index=True,
         nullable=False
     )
 
@@ -384,6 +383,7 @@ class SubjectProgress(Base):
         ForeignKey("subjects.id"),
         nullable=False
     )
+
 
     total_chapters = Column(Integer, default=0)
 
@@ -414,14 +414,16 @@ class DailyClass(Base):
     id = Column(Integer, primary_key=True, index=True)
 
     student_id = Column(
-        Integer,
+        String,
         ForeignKey("student_profiles.student_id"),
+        index=True,
         nullable=False
     )
 
     subject_name = Column(
         String,
         nullable=False)
+
 
     teacher_name = Column(
         String, 
@@ -493,17 +495,19 @@ class Assignment(Base):
 class AssignmentSubmission(Base):
     __tablename__ = "assignment_submissions"
 
-    id = Column(Integer, primary_key=True, index=True)
 
     assignment_id = Column(
         Integer,
         ForeignKey("assignments.id"),
-        nullable=False
+        nullable=False,
+        primary_key=True
     )
 
     student_id = Column(
-        Integer,
+        String,
         ForeignKey("student_profiles.student_id"),
+        primary_key=True,   
+        index=True,
         nullable=False
     )
 
@@ -568,17 +572,19 @@ class Exam(Base):
 class ExamResult(Base):
     __tablename__ = "exam_results"
 
-    id = Column(Integer, primary_key=True, index=True)
 
     Exam_id = Column(
         Integer,
         ForeignKey("exam.id"),
-        nullable=False
+        nullable=False,
+        primary_key=True
     )
 
     student_id = Column(
-        Integer,
+        String,
         ForeignKey("student_profiles.student_id"),
+        primary_key=True,   # make it the primary key
+        index=True,
         nullable=False
     )
 
@@ -612,12 +618,14 @@ class Fee(Base):
     id = Column(Integer, primary_key=True, index=True)
 
     student_id = Column(
-        Integer,
+        String,
         ForeignKey("student_profiles.student_id"),
+        index=True,
         nullable=False
     )
 
     month = Column(String, nullable=False)
+
 
     paid_amount = Column(String, nullable=False)
 
@@ -641,15 +649,12 @@ class ChatMessage(Base):
 
     __tablename__ = "chat_messages"
 
-    id = Column(
-        Integer,
-        primary_key=True,
-        index=True
-    )
+    id = Column(Integer, primary_key=True, index=True)
 
     student_id = Column(
-        Integer,
+        String,
         ForeignKey("student_profiles.student_id"),
+        index=True,
         nullable=False
     )
 
@@ -657,6 +662,7 @@ class ChatMessage(Base):
         String,
         nullable=False
     )
+
     # student / teacher
 
     sender_name = Column(
@@ -683,17 +689,15 @@ class VoiceMessage(Base):
 
     __tablename__ = "voice_messages"
 
-    id = Column(
-        Integer,
-        primary_key=True,
-        index=True
-    )
+    id = Column(Integer, primary_key=True, index=True)
 
     student_id = Column(
-        Integer,
+        String,
         ForeignKey("student_profiles.student_id"),
+        index=True,
         nullable=False
     )
+
 
     sender_type = Column(
         String,
