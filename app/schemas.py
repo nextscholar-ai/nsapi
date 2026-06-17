@@ -331,31 +331,25 @@ class AssignmentResponse(BaseModel):
 # =====================================================
 
 class AssignmentSubmissionCreate(BaseModel):
-
     assignment_id: int
-
     submission_type: str
 
     text_content: Optional[str] = None
-
     file_path: Optional[str] = None
 
 
 class AssignmentSubmissionResponse(BaseModel):
-
-    id: int
-
     assignment_id: int
+    student_id: str
 
     submission_type: str
-
-    text_content: Optional[str] = None
-
-    file_path: Optional[str] = None
+    text_content: Optional[str]
+    file_path: Optional[str]
 
     status: str
+    marks: Optional[int]
 
-    marks: Optional[int] = None
+    submitted_at: datetime
 
     class Config:
         from_attributes = True

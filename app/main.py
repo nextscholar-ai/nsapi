@@ -11,6 +11,7 @@ from app.routers.student_routers import router as student_router
 from app.routers.subject_routers import router as subject_router
 from app.routers.daily_class_routers import router as daily_class_router
 from app.routers.assignment_routers import router as assignment_router
+from app.routers.assignment_submission_routers import router as assignment_submission_router
 from app.routers.exam_routers import router as exam_router
 from app.routers.exam_table_routers import router as exam_table_router
 
@@ -35,6 +36,7 @@ app.include_router(student_router)
 app.include_router(subject_router)
 app.include_router(daily_class_router)
 app.include_router(assignment_router)
+app.include_router(assignment_submission_router)
 app.include_router(exam_router)
 app.include_router(exam_table_router)
 app.include_router(fees_router)
