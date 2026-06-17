@@ -3,6 +3,7 @@ from fastapi import Depends
 from fastapi import HTTPException
 
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 
 from app.models import (
     StudentProfile,
@@ -89,7 +90,7 @@ def create_exam(
             db.query(Exam)
             .join(Subject, Exam.subject_id == Subject.id)
             .filter(
-                Subject.subject_name == data.subject_name,
+                func.lower(Subject.subject_name) == data.subject_name.strip().lower(),
                 Exam.exam_name == data.exam_name,
                 Exam.exam_date == data.exam_date,
             )
@@ -134,7 +135,7 @@ def create_exam(
         Exam_id=exam.id,
         student_id=student.student_id,
 
-        subject_name=subject_for_result.subject_name,
+        subject_name=subject_for_result.subject_name.strip().title(),
         exam_name=exam.exam_name,
         exam_date=exam.exam_date,
         total_marks=total_marks,
@@ -318,8 +319,8 @@ def results_by_subject(
             ExamResult.student_id
             == student.student_id,
 
-            ExamResult.subject_name
-            == subject_name
+            func.lower(Subject.subject_name)
+            == subject_name.strip().lower()
         )
 
         .all()

@@ -3,10 +3,12 @@ from fastapi import Depends
 from fastapi import HTTPException
 
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 
 from app.models import (
     StudentProfile,
-    DailyClass
+    DailyClass,
+    Subject
 )
 
 from app.schemas import (
@@ -67,7 +69,7 @@ def create_daily_class(
 
         student_id=student.student_id,
 
-        subject_name=data.subject_name,
+        subject_name=data.subject_name.strip().title(),
 
         teacher_name=data.teacher_name,
 
@@ -132,7 +134,7 @@ def update_daily_class(
             detail="Class not found"
         )
 
-    record.subject_name = data.subject_name
+    record.subject_name = data.subject_name.strip().title()
     record.teacher_name = data.teacher_name
     record.day_name = data.day_name
     record.class_date = data.class_date
@@ -208,12 +210,19 @@ def classes_by_subject(
 
         db.query(DailyClass)
 
+        .join(
+            Subject,
+            DailyClass.subject_name == Subject.subject_name
+        )
+
+
         .filter(
             DailyClass.student_id
             == student.student_id,
 
-            DailyClass.subject_name
-            == subject_name
+            func.lower(Subject.subject_name)
+            == subject_name.strip().lower()
+        
         )
 
         .order_by(

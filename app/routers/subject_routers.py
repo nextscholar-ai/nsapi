@@ -24,6 +24,9 @@ from app.dependencies import (
     get_current_student
 )
 
+def normalize_subject_name(name: str) -> str:
+    return name.strip().title()
+
 router = APIRouter(
     prefix="/subjects",
     tags=["Subjects"]
@@ -49,26 +52,27 @@ def create_subject(
 
 ):
 
+    normalized_name = normalize_subject_name(
+    data.subject_name
+)
+
     existing = (
-
         db.query(Subject)
-
         .filter(
-            func.lower(Subject.subject_name) == func.lower(data.subject_name)
+            func.lower(Subject.subject_name)
+            == normalized_name.lower()
         )
-
         .first()
     )
 
     if existing:
-
         raise HTTPException(
             status_code=400,
             detail="Subject already exists"
         )
-
+    
     subject = Subject(
-        subject_name=data.subject_name
+        subject_name=normalized_name
     )
 
     db.add(subject)

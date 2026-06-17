@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 
 from app.dependencies import get_db
 from app.models import Exam, Subject
@@ -19,21 +20,28 @@ def _get_exam(db: Session, exam_id: int) -> Exam:
 
 
 def _resolve_subject_id(db: Session, subject_name: str) -> Subject:
-    subject = db.query(Subject).filter(Subject.subject_name == subject_name).first()
+    subject = db.query(Subject).filter(func.lower(Subject.subject_name) == subject_name.strip().lower()).first()
     if not subject:
         raise HTTPException(status_code=404, detail="Subject not found")
     return subject
 
 
 def _exam_to_response(db: Session, exam: Exam) -> ExamTableResponse:
-    subject = db.query(Subject).filter(Subject.id == exam.subject_id).first()
+    subject = (
+        db.query(Subject)
+        .filter(
+            Subject.id == exam.subject_id
+        )
+        .first()
+    )
+
     if not subject:
         raise HTTPException(status_code=404, detail="Subject not found")
 
     # Build response explicitly because Exam model stores subject_id
     return ExamTableResponse(
         id=exam.id,
-        subject_name=subject.subject_name,
+        subject_name=subject.subject_name.strip().title(),
         exam_name=exam.exam_name,
         exam_date=exam.exam_date,
         title=exam.title,
@@ -148,7 +156,7 @@ def list_exam_tables(
     q = db.query(Exam)
 
     if subject_name:
-        subject = db.query(Subject).filter(Subject.subject_name == subject_name).first()
+        subject = db.query(Subject).filter(func.lower(Subject.subject_name) == subject_name.strip().lower()).first()
         if not subject:
             return []
         q = q.filter(Exam.subject_id == subject.id)

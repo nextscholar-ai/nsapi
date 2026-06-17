@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
+from sqlalchemy import func
 
 from sqlalchemy.orm import Session
 
@@ -242,7 +243,10 @@ def assignments_by_subject(
         )
 
         .filter(
-            Subject.subject_name == subject_name
+           func.lower(Subject.subject_name)
+           == subject_name.strip().lower()
+        
+        
         )
 
         .all()
