@@ -2,8 +2,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import Base, engine
 
+from fastapi.staticfiles import StaticFiles
+
 # IMPORT MODELS (IMPORTANT)
 import app.models
+
 
 # ROUTERS
 from app.routers.auth_routers import router as auth_router
@@ -18,6 +21,8 @@ from app.routers.exam_table_routers import router as exam_table_router
 from app.routers.fees_routers import router as fees_router
 from app.routers.chat_routers import router as chat_router
 from app.routers.dashboard_routers import router as dashboard_router
+
+from app.routers.notice_routers import router as notice_router
 
 # CREATE TABLES
 Base.metadata.create_all(bind=engine)
@@ -44,6 +49,8 @@ app.include_router(fees_router)
 app.include_router(chat_router)
 app.include_router(dashboard_router)
 
+app.include_router(notice_router)
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -56,6 +63,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+app.mount(
+    "/uploads",
+    StaticFiles(directory="uploads"),
+    name="uploads"
+)
 
 # =========================
 # HEALTH CHECK

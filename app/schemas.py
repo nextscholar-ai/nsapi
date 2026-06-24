@@ -566,3 +566,44 @@ class VoiceMessageResponse(BaseModel):
     class Config:
         from_attributes = True
 
+
+
+# =====================================================
+# NOTICE BOARD
+# =====================================================
+
+class NoticeCreate(BaseModel):
+
+    title: str
+
+    description: Optional[str] = None
+
+
+class NoticeAttachmentResponse(BaseModel):
+
+    id: int
+
+    file_name: str
+
+    file_path: str
+
+    file_type: str
+
+    class Config:
+        from_attributes = True
+
+
+class NoticeResponse(BaseModel):
+
+    id: int
+
+    title: str
+
+    description: Optional[str] = None
+
+    created_at: datetime
+
+    attachments: list[NoticeAttachmentResponse] = []
+
+    class Config:
+        from_attributes = True

@@ -722,3 +722,81 @@ class VoiceMessage(Base):
     student = relationship(
         "StudentProfile"
     )
+
+
+
+
+# =====================================================
+# NOTICE BOARD
+# =====================================================
+
+class Notice(Base):
+    __tablename__ = "notices"
+
+    id = Column(
+        Integer,
+        primary_key=True,
+        index=True
+    )
+
+    title = Column(
+        String,
+        nullable=False
+    )
+
+    description = Column(
+        Text,
+        nullable=True
+    )
+
+    created_at = Column(
+        DateTime,
+        default=datetime.utcnow
+    )
+
+    attachments = relationship(
+        "NoticeAttachment",
+        back_populates="notice",
+        cascade="all, delete-orphan"
+    )
+
+
+class NoticeAttachment(Base):
+    __tablename__ = "notice_attachments"
+
+    id = Column(
+        Integer,
+        primary_key=True,
+        index=True
+    )
+
+    notice_id = Column(
+        Integer,
+        ForeignKey("notices.id"),
+        nullable=False
+    )
+
+    file_name = Column(
+        String,
+        nullable=False
+    )
+
+    file_path = Column(
+        String,
+        nullable=False
+    )
+
+    file_type = Column(
+        String,
+        nullable=False
+    )
+
+    uploaded_at = Column(
+        DateTime,
+        default=datetime.utcnow
+    )
+
+    notice = relationship(
+        "Notice",
+        back_populates="attachments"
+    )
