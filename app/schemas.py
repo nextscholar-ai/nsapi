@@ -542,32 +542,6 @@ class ChatMessageResponse(BaseModel):
         from_attributes = True
 
 
-class VoiceMessageCreate(BaseModel):
-
-    sender_type: str
-
-    sender_name: str
-
-    voice_file: str
-
-
-class VoiceMessageResponse(BaseModel):
-
-    id: int
-
-    sender_type: str
-
-    sender_name: str
-
-    voice_file: str
-
-    created_at: datetime
-
-    class Config:
-        from_attributes = True
-
-
-
 # =====================================================
 # NOTICE BOARD
 # =====================================================

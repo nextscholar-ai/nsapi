@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import Base, engine
 
+import os
 from fastapi.staticfiles import StaticFiles
 
 # IMPORT MODELS (IMPORTANT)
@@ -23,6 +24,7 @@ from app.routers.chat_routers import router as chat_router
 from app.routers.dashboard_routers import router as dashboard_router
 
 from app.routers.notice_routers import router as notice_router
+
 
 # CREATE TABLES
 Base.metadata.create_all(bind=engine)
@@ -69,6 +71,8 @@ app.mount(
     StaticFiles(directory="uploads"),
     name="uploads"
 )
+
+
 
 # =========================
 # HEALTH CHECK

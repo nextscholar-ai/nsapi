@@ -90,5 +90,5 @@ def verify_reset_token(token: str, max_age=1800):
 # =========================
 
 def generate_otp():
-    return str(random.randint(100000, 999999))
+    return str(random.randint(1000, 9999))
 

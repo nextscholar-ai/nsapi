@@ -685,44 +685,6 @@ class ChatMessage(Base):
     )
 
 
-class VoiceMessage(Base):
-
-    __tablename__ = "voice_messages"
-
-    id = Column(Integer, primary_key=True, index=True)
-
-    student_id = Column(
-        String,
-        ForeignKey("student_profiles.student_id"),
-        index=True,
-        nullable=False
-    )
-
-
-    sender_type = Column(
-        String,
-        nullable=False
-    )
-
-    sender_name = Column(
-        String,
-        nullable=False
-    )
-
-    voice_file = Column(
-        String,
-        nullable=False
-    )
-
-    created_at = Column(
-        DateTime,
-        default=datetime.utcnow
-    )
-
-    student = relationship(
-        "StudentProfile"
-    )
-
 
 
 
